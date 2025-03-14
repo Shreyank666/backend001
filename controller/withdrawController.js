@@ -2,6 +2,7 @@ const User = require("../models/UserSignUp");
 const User_Wallet = require("../models/Wallet");
 const Withdraw = require("../models/withdrawModel");
 const mongoose = require('mongoose');
+const News = require("../models/newsModel");
 // 🔸 Create a new withdrawal request
 exports.createWithdrawal = async (req, res) => {
     try {
@@ -287,3 +288,30 @@ exports.userLoginUserNo =async(req,res)=>{
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 }
+
+
+exports.platformnews =async(req,res)=>{
+  try {
+    const news = await News.find();
+    res.json(news);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+exports.updatenews = async (req, res) => {
+  try {
+    const { content } = req.body;
+
+    let updatedNews = await News.findOneAndUpdate({}, { content }, { new: true });
+
+    if (!updatedNews) {
+      // If no news exists, create a new one
+      updatedNews = await News.create({ content });
+    }
+
+    res.json(updatedNews);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating news", error });
+  }
+};
