@@ -7,6 +7,8 @@ router.post("/withdraw", withdrawController.createWithdrawal);
 
 // Route to fetch all withdrawals
 router.get('/getupiqr', withdrawController.getupiqr);
+router.put('/admin/updatenews', withdrawController.updatenews);
+router.get('/platform/news', withdrawController.platformnews);
 router.get('/getwithdrawal/:userId', withdrawController.getAllWithdrawals);
 router.get('/userLoginUserNo/:username', withdrawController.userLoginUserNo);
 router.get('/admin/getuserpayemt', withdrawController.getAllPayments);
