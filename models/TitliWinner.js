@@ -6,4 +6,4 @@ const winnerTitliSchema = new mongoose.Schema({
     // selectedCard: [],
 }, { timestamps: true });
 const winnerTitliModel = mongoose.model('titli-random-images', winnerTitliSchema);
-module.exports = winnerTitliModel;
+module.exports = winnerTitliModel; 
