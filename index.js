@@ -374,7 +374,7 @@ const fetchOdds = async () => {
 
     for (const marketId of marketIds) {
       const response = await axios.get(
-        `https://oddsapi.winx777.com/v2/api/oddsData?market_id=${marketId}`
+        `https://tvssocket.crickexpo.in/v2/api/oddsDataNew?market_id=${marketId}`
       );
 
       // Log the full response to debug
