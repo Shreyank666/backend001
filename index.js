@@ -51,7 +51,7 @@ app.use(
 
 const MONGO_URI = process.env.mongodb_url;
 // MongoDB connection
-mongoose.connect(`mongodb+srv://infusion:oxPmrqHhXOdsBLPk@cluster0.rnz0y.mongodb.net/laxhmibook?retryWrites=true&w=majority&appName=Cluster0`)
+mongoose.connect(`mongodb+srv://infusionwebsitescoin2:YIP9I78y2kDHoas5@cluster0.zfr72.mongodb.net/98fastbet?retryWrites=true&w=majority&appName=Cluster0`)
   .then(() => console.log("MongoDB Connected Successfully!"))
   .catch(err => console.error("MongoDB Connection Error:", err));
 
