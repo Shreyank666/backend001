@@ -19,7 +19,7 @@ let images = [
 // Function to get a random allowed image
 const getRandomAllowedImage = () => {
     const allowedImages = images.filter(img => img.isAllowed);
-    
+    // console.log(all)
     if (allowedImages.length === 0) {
         return null; // or handle the case when there are no allowed images
     }
@@ -48,27 +48,35 @@ exports.updateRandomImage = async (req, res) => {
 // API to fetch the latest allowed random image
 exports.getRandomImage = async (req, res) => {
     try {
-        const latestEntry = await titliWinnerModel.find().sort({ createdAt: -1 });
-        if (!latestEntry) {
-            return res.status(404).json({ message: "No random images found." });
+        // Fetch only images where isAllowed is true
+        const allowedImages = await titliWinnerModel.find({ "Images.isAllowed": true });
+
+        if (!allowedImages.length) {
+            return res.status(404).json({ message: "No allowed images found in the database." });
         }
-        // const randomImage = latestEntry.length >= 2 && latestEntry[0].randomImage === latestEntry[1].randomImage ?
-        //     images[Math.floor(Math.random() * images.length)].image :
-        //     getRandomAllowedImage();
-        const randomImage = getRandomAllowedImage();
-        res.status(200).json({ randomImage });
+
+        // Select a random image from the allowed images
+        const randomEntry = allowedImages[Math.floor(Math.random() * allowedImages.length)];
+        if (!randomEntry) {
+            return res.status(200).json({ message: "Random images found in the database." , randomImage: getRandomAllowedImage() }); 
+        }
+        const randomImage = randomEntry.Images.find(img => img.isAllowed);
+
+        res.status(200).json({ randomImage: randomImage.image });
+
     } catch (error) {
-        console.error("Error fetching random image:", error);
-        res.status(500).json({ message: error.message });
+        console.error("Error fetching random allowed image:", error);
+        res.status(500).json({ message: "Internal server error.", error: error.message });
     }
 };
+
 
 // API to update the isAllowed status of an image
 exports.updateIsAllowed = async (req, res) => {
     try {
         const { image, isAllowed } = req.body;
 
-        // console.log("Received request:", image, isAllowed);
+        console.log("Received request:", image, isAllowed);
 
         if (!image) {
             return res.status(400).json({ message: "Image URL is required." });
@@ -78,7 +86,7 @@ exports.updateIsAllowed = async (req, res) => {
         const existingEntry = await titliWinnerModel.findOne({ "Images.image": image });
 
         if (!existingEntry) {
-           
+            console.log("❌ Image not found in database:", image);
             return res.status(404).json({ message: "Image not found in database." });
         }
 
@@ -89,7 +97,7 @@ exports.updateIsAllowed = async (req, res) => {
             { new: true }
         );
 
-        // console.log("✅ Image updated successfully:", updatedEntry);
+        console.log("✅ Image updated successfully:", updatedEntry);
 
         res.status(200).json({
             message: "Image updated successfully!",
@@ -106,6 +114,7 @@ exports.updateIsAllowed = async (req, res) => {
 exports.getAllRandomImages = async (req, res) => {
     try {
         const data = await titliWinnerModel.find().sort({ createdAt: -1 });
+        console.log(data)
         if (data.length === 0) {
             const newEntry = new titliWinnerModel({ Images: images });
             await newEntry.save();
@@ -133,7 +142,7 @@ exports.getRandomAllowedImageFromArray = (req, res) => {
     try {
         // const randomImage = getRandomAllowedImage();
         const allowedImages = images.filter(img => img.isAllowed);
-        // console.log(allowedImages);
+        console.log(allowedImages);
         if (!allowedImages) {
             return res.status(404).json({ message: "No allowed images available." });
         }
