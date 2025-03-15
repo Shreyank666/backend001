@@ -12,4 +12,4 @@ router.get("/titli/get-all-images-from-array", titliWinnerController.getAllImage
 router.get("/titli/get-all-allow-images-from-array", titliWinnerController.getRandomAllowedImageFromArray);
 router.put("/titli/update-is-allowed", titliWinnerController.updateIsAllowed);
 
-module.exports = router;
+module.exports = router; 
